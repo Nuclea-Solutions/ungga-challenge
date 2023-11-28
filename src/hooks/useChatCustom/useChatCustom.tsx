@@ -33,30 +33,47 @@ const useChatCustom = () => {
 	]);
 	const conversationList = useConversationsStore((state) => state.conversationList);
 	const [inputMessage, setInputMessage] = useState('');
+	const [assistant, setAssistant] = useState('');
+	const [thread, setThread] = useState('');
 	const [isLoading, setIsLoading] = useState(false);
 
 	const handleChangeMessage = (e: any) => {
 		setInputMessage(e.target.value);
 	};
 
-	const sendMessage = useCallback(async (newMessage: string) => {
-		setInputMessage('');
-
+	const inithialAssitant = useCallback(async () => {
 		try {
-			const response = await axios.post('/api/chat', {
-				message: newMessage,
-				userId: userId.current
-			});
-
-			setNewMessage({
-				content: response.data,
-				id: nanoid(),
-				role: 'assistant'
-			});
+			const { data } = await axios.get('/api/assistant');
+			console.log(data);
+			setAssistant((prevAssistant) => data.data.assistant);
+			setThread((prevThread) => data.data.thread);
 		} catch (error) {
-			console.error(error);
+			console.log(error);
 		}
 	}, []);
+
+	const sendMessage = useCallback(
+		async (newMessage: string) => {
+			setInputMessage('');
+
+			try {
+				const response = await axios.post('/api/chat', {
+					message: newMessage,
+					userId: userId.current,
+					assistant: assistant,
+					thread: thread
+				});
+				setNewMessage({
+					content: response.data.data[0].message.value,
+					id: nanoid(),
+					role: 'assistant'
+				});
+			} catch (error) {
+				console.error(error);
+			}
+		},
+		[assistant, thread]
+	);
 
 	// Current chat input component name
 	const inputType = useMemo(
@@ -170,15 +187,19 @@ const useChatCustom = () => {
 	}, []);
 
 	// Save initial message
-	// useEffect(() => {
-	// 	if (messages.length === 0) {
-	// 		setNewMessage({
-	// 			content: PROMPTS.initial,
-	// 			id: 'initial',
-	// 			role: 'system'
-	// 		});
-	// 	}
-	// }, []);
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				await inithialAssitant();
+				console.log('Assistant:', assistant);
+				console.log('Thread:', thread);
+			} catch (error) {
+				console.error('Error al obtener datos:', error);
+			}
+		};
+
+		fetchData();
+	}, [inithialAssitant, assistant, thread]);
 
 	return {
 		handleInputChange: handleChangeMessage,

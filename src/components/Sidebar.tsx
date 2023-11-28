@@ -33,7 +33,7 @@ const SidebarComponent = ({
 	const currentDate = new Date();
 	const router = useRouter();
 
-	const [setMessages, setMessagesComponents] = useMessagesStore((state) => [
+	const [setMessages, setMessagesComponents] = useMessagesStore((state: any) => [
 		state.setMessages,
 		state.setMessagesComponents
 	]);
@@ -61,28 +61,28 @@ const SidebarComponent = ({
 	useEffect(() => {
 		conversations?.map((conversation) => {
 			if (calculatedDays(conversation.create_time) === 1)
-				setDaysPassed((prevState) => ({ ...prevState, today: true }));
+				setDaysPassed((prevState: any) => ({ ...prevState, today: true }));
 
 			if (calculatedDays(conversation.create_time) === 2)
-				setDaysPassed((prevState) => ({
+				setDaysPassed((prevState: any) => ({
 					...prevState,
 					yesterday: true
 				}));
 
 			if (calculatedDays(conversation.create_time) === 3)
-				setDaysPassed((prevState) => ({
+				setDaysPassed((prevState: any) => ({
 					...prevState,
 					previousSevenDays: true
 				}));
 
 			if (calculatedDays(conversation.create_time) === 4)
-				setDaysPassed((prevState) => ({
+				setDaysPassed((prevState: any) => ({
 					...prevState,
 					previousMonth: true
 				}));
 
 			if (calculatedDays(conversation.create_time) === 0)
-				setDaysPassed((prevState) => ({
+				setDaysPassed((prevState: any) => ({
 					...prevState,
 					moreThanaMonth: true
 				}));
@@ -128,7 +128,7 @@ const SidebarComponent = ({
 								setMessagesComponents([]);
 								router.push('/');
 							}}
-							className='truncate text-sm'
+							className='text-sm truncate'
 						>
 							New chat
 						</button>
@@ -151,13 +151,13 @@ const SidebarComponent = ({
 					</div>
 				</div>
 			</div>
-			<div className='flex-1 overflow-y-auto border-white/20 py-2 pl-2' id='content_sidebar'>
+			<div className='flex-1 py-2 pl-2 overflow-y-auto border-white/20' id='content_sidebar'>
 				<div
 					className={`px-3 h-9 pb-2 pt-3 text-ellipsis overflow-hidden break-all ${
 						!daysPassed.today && 'hidden'
 					}`}
 				>
-					<h3 className=' text-xs font-medium text-gray-500'>Today</h3>
+					<h3 className='text-xs font-medium text-gray-500 '>Today</h3>
 				</div>
 				{conversations?.map((conversation) => (
 					<div
@@ -283,9 +283,9 @@ const SidebarComponent = ({
 				} relative`}
 			>
 				<div className='flex items-center gap-3 w-full rounded-[8px] text-sm p-1 hover:bg-gray-700/50 text-white'>
-					<span className='flex w-full flex-row flex-wrap-reverse justify-between'>
-						<span className='gold-new-button flex items-center gap-3'>
-							<span className='flex h-8 w-8 items-center justify-center rounded-full border border-white/50 bg-black'>
+					<span className='flex flex-row flex-wrap-reverse justify-between w-full'>
+						<span className='flex items-center gap-3 gold-new-button'>
+							<span className='flex items-center justify-center w-8 h-8 bg-black border rounded-full border-white/50'>
 								<svg
 									width='18'
 									height='18'
@@ -306,7 +306,7 @@ const SidebarComponent = ({
 							</span>
 							<div>
 								<p className='font-bold'>Upgrade</p>
-								<p className='font-extralight text-xs text-white/70'>Get GPT-4, DALL-E,and more</p>
+								<p className='text-xs font-extralight text-white/70'>Get GPT-4, DALL-E,and more</p>
 							</div>
 						</span>
 					</span>
@@ -318,7 +318,7 @@ const SidebarComponent = ({
 					<div className='h-8 w-8 rounded-[2px]'>
 						<Image src={photoUrl} alt='user' width={100} radius='none' />
 					</div>
-					<p className='grow overflow-hidden text-ellipsis font-semibold whitespace-nowrap text-left'>
+					<p className='overflow-hidden font-semibold text-left grow text-ellipsis whitespace-nowrap'>
 						{userName}
 					</p>
 				</div>
@@ -335,7 +335,7 @@ const SidebarComponent = ({
 							width='25'
 							height='25'
 							viewBox='0 0 25 25'
-							className='h-4 w-4 shrink-0'
+							className='w-4 h-4 shrink-0'
 							fill='none'
 						>
 							<path
